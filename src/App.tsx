@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Check, ChevronDown, Languages, Moon, Sun } from "lucide-react";
 import { AgentInsightsPanel } from "./components/AgentInsightsPanel";
 import { AnalysisProgress } from "./components/AnalysisProgress";
+import { BusinessImpact } from "./components/BusinessImpact";
 import { FindingsList } from "./components/FindingsList";
 import { HeroHeader } from "./components/HeroHeader";
 import { MetricsDashboard } from "./components/MetricsDashboard";
@@ -14,6 +15,14 @@ import { useLanguage } from "./i18n/useLanguage";
 import { useTheme } from "./theme/useTheme";
 import type { Language } from "./types/ui";
 
+const DEMO_STEP_DURATION_MS = 700;
+
+const DEMO_REPOSITORY_URLS = {
+  excellent: "https://github.com/company/accessible-ui",
+  average: "https://github.com/company/customer-portal",
+  poor: "https://github.com/company/legacy-admin"
+} as const;
+
 function App() {
   const { language, setLanguage } = useLanguage();
   const { theme, toggleTheme } = useTheme();
@@ -21,7 +30,7 @@ function App() {
   const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
   const languageMenuRef = useRef<HTMLDivElement | null>(null);
 
-  const [repoUrl, setRepoUrl] = useState("https://github.com/example/app-web");
+  const [repoUrl, setRepoUrl] = useState<string>(DEMO_REPOSITORY_URLS.average);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [currentStep, setCurrentStep] = useState(-1);
   const [analysisComplete, setAnalysisComplete] = useState(false);
@@ -125,22 +134,44 @@ function App() {
 
         return nextStep;
       });
-    }, 1100);
+    }, DEMO_STEP_DURATION_MS);
 
     return () => window.clearTimeout(timeoutId);
   }, [analysisSteps.length, currentStep, isAnalyzing, pendingScenario]);
+
+  const startAnalysis = (url: string) => {
+    const nextScenario = getScenarioByUrl(url);
+
+    setPendingScenario(nextScenario);
+    setAnalysisComplete(false);
+    setCurrentStep(0);
+    setIsAnalyzing(true);
+  };
 
   const handleAnalyze = () => {
     if (!isValidGithubUrl || isAnalyzing) {
       return;
     }
 
-    const nextScenario = getScenarioByUrl(repoUrl);
+    startAnalysis(repoUrl);
+  };
 
-    setPendingScenario(nextScenario);
-    setAnalysisComplete(false);
-    setCurrentStep(0);
-    setIsAnalyzing(true);
+  const handleUseDemoRepository = () => {
+    if (isAnalyzing) {
+      return;
+    }
+
+    setRepoUrl(DEMO_REPOSITORY_URLS.average);
+  };
+
+  const handleQuickScenarioSelect = (
+    scenario: "excellent" | "average" | "poor"
+  ) => {
+    if (isAnalyzing) {
+      return;
+    }
+
+    setRepoUrl(DEMO_REPOSITORY_URLS[scenario]);
   };
 
   return (
@@ -255,11 +286,18 @@ function App() {
           url={repoUrl}
           onUrlChange={setRepoUrl}
           onAnalyze={handleAnalyze}
+          onUseDemoRepository={handleUseDemoRepository}
+          onSelectQuickScenario={handleQuickScenarioSelect}
           isAnalyzing={isAnalyzing}
           title={t.repository.title}
           description={t.repository.description}
           inputLabel={t.repository.inputLabel}
           placeholder={t.repository.placeholder}
+          useDemoRepositoryLabel={t.repository.useDemoRepository}
+          quickDemoLabel={t.repository.quickDemoLabel}
+          quickExcellentLabel={t.repository.quickExcellent}
+          quickAverageLabel={t.repository.quickAverage}
+          quickPoorLabel={t.repository.quickPoor}
           analyzeLabel={t.repository.buttonAnalyze}
           analyzingLabel={t.repository.buttonAnalyzing}
         />
@@ -329,6 +367,12 @@ function App() {
             </p>
           </section>
         )}
+
+        <BusinessImpact
+          title={t.businessImpact.title}
+          description={t.businessImpact.description}
+          bullets={t.businessImpact.bullets}
+        />
       </div>
     </main>
   );

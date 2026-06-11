@@ -14,14 +14,26 @@ interface FindingsListProps {
 
 function severityStyle(severity: Finding["severity"]) {
   if (severity === "HIGH") {
-    return "border-rose-400/30 bg-rose-400/10 text-rose-100";
+    return "severity-badge severity-badge-critical";
   }
 
   if (severity === "MEDIUM") {
-    return "border-amber-300/30 bg-amber-300/10 text-amber-100";
+    return "severity-badge severity-badge-medium";
   }
 
-  return "border-emerald-300/30 bg-emerald-300/10 text-emerald-100";
+  return "severity-badge severity-badge-low";
+}
+
+function severityCardStyle(severity: Finding["severity"]) {
+  if (severity === "HIGH") {
+    return "finding-card finding-card-critical";
+  }
+
+  if (severity === "MEDIUM") {
+    return "finding-card finding-card-medium";
+  }
+
+  return "finding-card finding-card-low";
 }
 
 function severityLabel(
@@ -59,7 +71,7 @@ export function FindingsList({
         {findings.map(item => (
           <article
             key={item.id}
-            className="rounded-xl border border-slate-800 bg-slate-950/70 p-5">
+            className={`rounded-xl border border-slate-800 bg-slate-950/70 p-5 ${severityCardStyle(item.severity)}`}>
             <div className="flex flex-wrap items-center gap-3">
               <span
                 className={`rounded-full border px-3 py-1 text-xs font-semibold tracking-[0.08em] ${severityStyle(item.severity)}`}>

@@ -39,8 +39,14 @@ interface TranslationSchema {
     description: string;
     inputLabel: string;
     placeholder: string;
+    useDemoRepository: string;
+    quickDemoLabel: string;
+    quickExcellent: string;
+    quickAverage: string;
+    quickPoor: string;
     buttonAnalyze: string;
     buttonAnalyzing: string;
+    runDemo: string;
   };
   app: {
     invalidUrl: string;
@@ -82,6 +88,11 @@ interface TranslationSchema {
     priorityLabel: string;
     priority: Record<"High" | "Medium" | "Low", string>;
     insightById: Record<string, LocalizedInsight>;
+  };
+  businessImpact: {
+    title: string;
+    description: string;
+    bullets: string[];
   };
 }
 
@@ -141,8 +152,14 @@ export const translations: Record<Language, TranslationSchema> = {
         "Enter a GitHub repository URL to start the automated accessibility scan.",
       inputLabel: "GitHub repository URL",
       placeholder: "https://github.com/company/repository",
+      useDemoRepository: "Use Demo Repository",
+      quickDemoLabel: "Quick Demo Scenarios",
+      quickExcellent: "Excellent",
+      quickAverage: "Average",
+      quickPoor: "Poor",
       buttonAnalyze: "Analyze Repository",
-      buttonAnalyzing: "Analyzing..."
+      buttonAnalyzing: "Analyzing...",
+      runDemo: "Run Demo"
     },
     app: {
       invalidUrl: "Enter a valid GitHub repository URL to start the analysis.",
@@ -195,6 +212,16 @@ export const translations: Record<Language, TranslationSchema> = {
       priorityLabel: "Priority",
       priority: { High: "High", Medium: "Medium", Low: "Low" },
       insightById: {}
+    },
+    businessImpact: {
+      title: "Why this matters",
+      description: "Accessibility issues found before production.",
+      bullets: [
+        "Reduced remediation costs",
+        "Better user experience",
+        "WCAG compliance",
+        "Inclusive software delivery"
+      ]
     }
   },
   pt: {
@@ -246,8 +273,14 @@ export const translations: Record<Language, TranslationSchema> = {
         "Informe a URL de um repositório no GitHub para iniciar o escaneamento automático de acessibilidade.",
       inputLabel: "URL do repositório no GitHub",
       placeholder: "https://github.com/empresa/repositorio",
+      useDemoRepository: "Usar repositório demo",
+      quickDemoLabel: "Cenários rápidos de demo",
+      quickExcellent: "Excelente",
+      quickAverage: "Médio",
+      quickPoor: "Ruim",
       buttonAnalyze: "Analisar Repositório",
-      buttonAnalyzing: "Analisando..."
+      buttonAnalyzing: "Analisando...",
+      runDemo: "Executar demo"
     },
     app: {
       invalidUrl:
@@ -361,6 +394,16 @@ export const translations: Record<Language, TranslationSchema> = {
             "Padronize um checklist automatizado de acessibilidade no CI para evitar regressões e reduzir retrabalho antes da release."
         }
       }
+    },
+    businessImpact: {
+      title: "Por que isso importa",
+      description: "Problemas de acessibilidade encontrados antes da produção.",
+      bullets: [
+        "Redução de custos de remediação",
+        "Melhor experiência do usuário",
+        "Conformidade com WCAG",
+        "Entrega de software inclusivo"
+      ]
     }
   },
   es: {
@@ -414,8 +457,14 @@ export const translations: Record<Language, TranslationSchema> = {
         "Ingresa una URL de repositorio de GitHub para iniciar el escaneo automático de accesibilidad.",
       inputLabel: "URL del repositorio de GitHub",
       placeholder: "https://github.com/empresa/repositorio",
+      useDemoRepository: "Usar repositorio demo",
+      quickDemoLabel: "Escenarios rápidos de demo",
+      quickExcellent: "Excelente",
+      quickAverage: "Medio",
+      quickPoor: "Crítico",
       buttonAnalyze: "Analizar Repositorio",
-      buttonAnalyzing: "Analizando..."
+      buttonAnalyzing: "Analizando...",
+      runDemo: "Ejecutar demo"
     },
     app: {
       invalidUrl:
@@ -528,6 +577,16 @@ export const translations: Record<Language, TranslationSchema> = {
             "Estandariza una checklist automatizada de accesibilidad en CI para prevenir regresiones y reducir retrabajo antes del release."
         }
       }
+    },
+    businessImpact: {
+      title: "Por qué esto importa",
+      description: "Problemas de accesibilidad detectados antes de producción.",
+      bullets: [
+        "Reducción de costos de remediación",
+        "Mejor experiencia de usuario",
+        "Cumplimiento WCAG",
+        "Entrega de software inclusivo"
+      ]
     }
   }
 };
