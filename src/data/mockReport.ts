@@ -28,7 +28,8 @@ const scenarios: Record<AccessibilityScenarioKey, AccessibilityScenario> = {
         id: "EX-001",
         severity: "MEDIUM",
         wcagCriterion: "WCAG 1.4.3",
-        description: "Secondary badges have borderline contrast in disabled state.",
+        description:
+          "Secondary badges have borderline contrast in disabled state.",
         impact:
           "Low-vision users may struggle to read less prominent status labels.",
         suggestedFix:
@@ -59,8 +60,7 @@ const scenarios: Record<AccessibilityScenarioKey, AccessibilityScenario> = {
         severity: "LOW",
         wcagCriterion: "WCAG 1.3.1",
         description: "A decorative icon lacks aria-hidden in one card.",
-        impact:
-          "Assistive technologies may announce non-informative content.",
+        impact: "Assistive technologies may announce non-informative content.",
         suggestedFix:
           "Set aria-hidden=true for icons that do not convey semantic meaning."
       },
@@ -119,9 +119,10 @@ const scenarios: Record<AccessibilityScenarioKey, AccessibilityScenario> = {
           "Users who cannot use a mouse are blocked from accessing primary navigation.",
         suggestedFix:
           "Enable keyboard support for all menu interactions and preserve a visible focus state in each navigation step.",
-        beforeCode: "<button onClick={openMenu}>Menu</button>\n<div className=\"menu\">...</div>",
+        beforeCode:
+          '<button onClick={openMenu}>Menu</button>\n<div className="menu">...</div>',
         suggestedCode:
-          "<button\n  onClick={openMenu}\n  aria-haspopup=\"true\"\n  aria-expanded={isOpen}\n  onKeyDown={handleMenuKeyDown}\n>\n  Menu\n</button>\n<div role=\"menu\">...</div>"
+          '<button\n  onClick={openMenu}\n  aria-haspopup="true"\n  aria-expanded={isOpen}\n  onKeyDown={handleMenuKeyDown}\n>\n  Menu\n</button>\n<div role="menu">...</div>'
       },
       {
         id: "F-001",
@@ -133,7 +134,7 @@ const scenarios: Record<AccessibilityScenarioKey, AccessibilityScenario> = {
           "Add an alt attribute with meaningful context for each product image.",
         beforeCode: "<img src={product.image} />",
         suggestedCode:
-          "<img src={product.image} alt={product.name + \" package photo\"} />"
+          '<img src={product.image} alt={product.name + " package photo"} />'
       },
       {
         id: "F-002",
@@ -160,7 +161,8 @@ const scenarios: Record<AccessibilityScenarioKey, AccessibilityScenario> = {
         description: "Form field lacks clear input guidance.",
         impact:
           "Increases input errors and task abandonment during submission flows.",
-        suggestedFix: "Add helper text and attach a descriptive label to the field."
+        suggestedFix:
+          "Add helper text and attach a descriptive label to the field."
       },
       {
         id: "F-005",
@@ -221,21 +223,22 @@ const scenarios: Record<AccessibilityScenarioKey, AccessibilityScenario> = {
         id: "PO-002",
         severity: "HIGH",
         wcagCriterion: "WCAG 1.3.1",
-        description: "Form controls are visually labeled but not programmatically associated.",
+        description:
+          "Form controls are visually labeled but not programmatically associated.",
         impact:
           "Screen reader users hear unlabeled inputs, making form completion unreliable.",
         suggestedFix:
           "Link each input to a unique label using htmlFor/id pairs.",
-        beforeCode:
-          "<label>Email</label>\n<input type=\"email\" name=\"email\" />",
+        beforeCode: '<label>Email</label>\n<input type="email" name="email" />',
         suggestedCode:
-          "<label htmlFor=\"email\">Email</label>\n<input id=\"email\" type=\"email\" name=\"email\" />"
+          '<label htmlFor="email">Email</label>\n<input id="email" type="email" name="email" />'
       },
       {
         id: "PO-003",
         severity: "HIGH",
         wcagCriterion: "WCAG 1.1.1",
-        description: "Dashboard charts are rendered as images without text alternatives.",
+        description:
+          "Dashboard charts are rendered as images without text alternatives.",
         impact:
           "Assistive technology users miss critical performance information entirely.",
         suggestedFix:
@@ -255,9 +258,9 @@ const scenarios: Record<AccessibilityScenarioKey, AccessibilityScenario> = {
         id: "PO-005",
         severity: "MEDIUM",
         wcagCriterion: "WCAG 1.4.3",
-        description: "Body text contrast falls below minimum in multiple screens.",
-        impact:
-          "Low-vision users experience fatigue and incomplete reading.",
+        description:
+          "Body text contrast falls below minimum in multiple screens.",
+        impact: "Low-vision users experience fatigue and incomplete reading.",
         suggestedFix:
           "Adopt tokenized color pairs validated against WCAG AA thresholds."
       },
@@ -265,7 +268,8 @@ const scenarios: Record<AccessibilityScenarioKey, AccessibilityScenario> = {
         id: "PO-006",
         severity: "MEDIUM",
         wcagCriterion: "WCAG 4.1.2",
-        description: "Custom dropdowns lack role, state, and keyboard semantics.",
+        description:
+          "Custom dropdowns lack role, state, and keyboard semantics.",
         impact:
           "Assistive technologies cannot interpret expanded/collapsed state reliably.",
         suggestedFix:

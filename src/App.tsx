@@ -8,10 +8,7 @@ import { MetricsDashboard } from "./components/MetricsDashboard";
 import { RepositoryInput } from "./components/RepositoryInput";
 import { StoryFlow } from "./components/StoryFlow";
 import { TrustSignals } from "./components/TrustSignals";
-import {
-  defaultScenario,
-  getScenarioByUrl
-} from "./data/mockReport";
+import { defaultScenario, getScenarioByUrl } from "./data/mockReport";
 import { getTranslations, languageOptions } from "./i18n/translations";
 import { useLanguage } from "./i18n/useLanguage";
 import { useTheme } from "./theme/useTheme";
