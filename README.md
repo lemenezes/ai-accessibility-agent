@@ -1,73 +1,83 @@
-# React + TypeScript + Vite
+# AI Accessibility Agent
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+AI Accessibility Agent is a hackathon project focused on Shift-Left Accessibility.
 
-Currently, two official plugins are available:
+The app simulates an AI agent that analyzes a GitHub repository URL and returns an accessibility report before code reaches production.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tech Stack
 
-## React Compiler
+- React
+- Vite
+- TypeScript
+- Tailwind CSS v4
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Current Product Capabilities
 
-## Expanding the ESLint configuration
+- Dark and light themes with persistence
+- Internationalization (English, Portuguese, Spanish) with persistence
+- Modern analysis flow with animated progress pipeline
+- Scenario-based mock analysis by repository URL
+- Executive-style results dashboard
+- Detailed findings with impact and remediation guidance
+- Optional code remediation snippets (`Before` and `Suggested Fix`)
+- AI insights panel with prioritized recommendations
+- Custom project branding and favicons (no Vite branding)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Scenario Routing by URL
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+The mock engine selects analysis profiles automatically based on the typed repository URL:
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- Excellent Accessibility (`score 96`)
+  - If URL contains: `accessible`, `a11y`, `inclusive`
+- Poor Accessibility (`score 48`)
+  - If URL contains: `legacy`, `old`, `admin`
+- Average Accessibility (`score 84`)
+  - Default when no keyword matches
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Analysis Pipeline Messages
+
+During analysis, the UI runs progressive steps:
+
+1. Reading repository structure...
+2. Detecting React components...
+3. Checking semantic HTML...
+4. Evaluating keyboard navigation...
+5. Validating color contrast...
+6. Analyzing ARIA attributes...
+7. Generating remediation guidance...
+
+## Local Development
+
+Install dependencies:
+
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Run development server:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+## Validation
+
+Lint:
+
+```bash
+npm run lint
+```
+
+Build:
+
+```bash
+npm run build
+```
+
+## Demo Tips
+
+- Open with theme set to dark for maximum visual impact.
+- Use keyword-based URLs to quickly demo scenario switching:
+  - `https://github.com/org/accessible-ui`
+  - `https://github.com/org/legacy-admin-portal`
+  - `https://github.com/org/product-web`
