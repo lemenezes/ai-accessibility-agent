@@ -13,6 +13,8 @@ export interface Finding {
   description: string;
   impact: string;
   suggestedFix: string;
+  beforeCode?: string;
+  suggestedCode?: string;
 }
 
 export interface ReportSummary {

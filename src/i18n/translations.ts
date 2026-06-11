@@ -5,6 +5,8 @@ interface LocalizedFinding {
   description: string;
   impact: string;
   suggestedFix: string;
+  beforeCode?: string;
+  suggestedCode?: string;
 }
 
 interface LocalizedInsight {
@@ -67,6 +69,8 @@ interface TranslationSchema {
     title: string;
     impact: string;
     suggestedFix: string;
+    beforeCode: string;
+    suggestedCode: string;
     critical: string;
     medium: string;
     low: string;
@@ -155,10 +159,13 @@ export const translations: Record<Language, TranslationSchema> = {
       summaryRunning: "Executing repository scan and accessibility checks...",
       progress: "Progress",
       steps: [
-        "Cloning repository",
-        "Scanning source code",
-        "Running WCAG analysis",
-        "Generating accessibility report"
+        "Reading repository structure...",
+        "Detecting React components...",
+        "Checking semantic HTML...",
+        "Evaluating keyboard navigation...",
+        "Validating color contrast...",
+        "Analyzing ARIA attributes...",
+        "Generating remediation guidance..."
       ]
     },
     dashboard: {
@@ -174,6 +181,8 @@ export const translations: Record<Language, TranslationSchema> = {
       title: "Findings",
       impact: "Impact:",
       suggestedFix: "Suggested fix:",
+      beforeCode: "Before",
+      suggestedCode: "Suggested Fix",
       critical: "CRITICAL",
       medium: "MEDIUM",
       low: "LOW",
@@ -257,10 +266,13 @@ export const translations: Record<Language, TranslationSchema> = {
         "Executando escaneamento do repositório e verificações de acessibilidade...",
       progress: "Progresso",
       steps: [
-        "Clonando repositório",
-        "Escaneando código-fonte",
-        "Executando análise WCAG",
-        "Gerando relatório de acessibilidade"
+        "Lendo estrutura do repositório...",
+        "Detectando componentes React...",
+        "Verificando HTML semântico...",
+        "Avaliando navegação por teclado...",
+        "Validando contraste de cores...",
+        "Analisando atributos ARIA...",
+        "Gerando orientação de remediação..."
       ]
     },
     dashboard: {
@@ -276,6 +288,8 @@ export const translations: Record<Language, TranslationSchema> = {
       title: "Achados",
       impact: "Impacto:",
       suggestedFix: "Correção sugerida:",
+      beforeCode: "Antes",
+      suggestedCode: "Correção sugerida",
       critical: "CRÍTICO",
       medium: "MÉDIO",
       low: "BAIXO",
@@ -420,10 +434,13 @@ export const translations: Record<Language, TranslationSchema> = {
         "Ejecutando escaneo del repositorio y verificaciones de accesibilidad...",
       progress: "Progreso",
       steps: [
-        "Clonando repositorio",
-        "Escaneando código fuente",
-        "Ejecutando análisis WCAG",
-        "Generando informe de accesibilidad"
+        "Leyendo estructura del repositorio...",
+        "Detectando componentes React...",
+        "Verificando HTML semántico...",
+        "Evaluando navegación por teclado...",
+        "Validando contraste de color...",
+        "Analizando atributos ARIA...",
+        "Generando guía de remediación..."
       ]
     },
     dashboard: {
@@ -439,6 +456,8 @@ export const translations: Record<Language, TranslationSchema> = {
       title: "Hallazgos",
       impact: "Impacto:",
       suggestedFix: "Corrección sugerida:",
+      beforeCode: "Antes",
+      suggestedCode: "Corrección sugerida",
       critical: "CRÍTICO",
       medium: "MEDIO",
       low: "BAJO",

@@ -8,7 +8,10 @@ import { MetricsDashboard } from "./components/MetricsDashboard";
 import { RepositoryInput } from "./components/RepositoryInput";
 import { StoryFlow } from "./components/StoryFlow";
 import { TrustSignals } from "./components/TrustSignals";
-import { agentInsights, findings, reportSummary } from "./data/mockReport";
+import {
+  defaultScenario,
+  getScenarioByUrl
+} from "./data/mockReport";
 import { getTranslations, languageOptions } from "./i18n/translations";
 import { useLanguage } from "./i18n/useLanguage";
 import { useTheme } from "./theme/useTheme";
@@ -25,12 +28,14 @@ function App() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [currentStep, setCurrentStep] = useState(-1);
   const [analysisComplete, setAnalysisComplete] = useState(false);
+  const [activeScenario, setActiveScenario] = useState(defaultScenario);
+  const [pendingScenario, setPendingScenario] = useState(defaultScenario);
 
   const analysisSteps = t.pipeline.steps;
 
   const localizedFindings = useMemo(
     () =>
-      findings.map(item => {
+      activeScenario.findings.map(item => {
         const localizedItem = t.findings.findingById[item.id];
 
         if (!localizedItem) {
@@ -42,15 +47,17 @@ function App() {
           wcagCriterion: localizedItem.wcagCriterion ?? item.wcagCriterion,
           description: localizedItem.description,
           impact: localizedItem.impact,
-          suggestedFix: localizedItem.suggestedFix
+          suggestedFix: localizedItem.suggestedFix,
+          beforeCode: localizedItem.beforeCode ?? item.beforeCode,
+          suggestedCode: localizedItem.suggestedCode ?? item.suggestedCode
         };
       }),
-    [t.findings.findingById]
+    [activeScenario.findings, t.findings.findingById]
   );
 
   const localizedInsights = useMemo(
     () =>
-      agentInsights.map(item => {
+      activeScenario.insights.map(item => {
         const localizedItem = t.insights.insightById[item.id];
 
         if (!localizedItem) {
@@ -63,7 +70,7 @@ function App() {
           detail: localizedItem.detail
         };
       }),
-    [t.insights.insightById]
+    [activeScenario.insights, t.insights.insightById]
   );
 
   const isValidGithubUrl = useMemo(
@@ -115,6 +122,7 @@ function App() {
 
         if (nextStep >= analysisSteps.length) {
           setIsAnalyzing(false);
+          setActiveScenario(pendingScenario);
           setAnalysisComplete(true);
         }
 
@@ -123,13 +131,16 @@ function App() {
     }, 1100);
 
     return () => window.clearTimeout(timeoutId);
-  }, [analysisSteps.length, currentStep, isAnalyzing]);
+  }, [analysisSteps.length, currentStep, isAnalyzing, pendingScenario]);
 
   const handleAnalyze = () => {
     if (!isValidGithubUrl || isAnalyzing) {
       return;
     }
 
+    const nextScenario = getScenarioByUrl(repoUrl);
+
+    setPendingScenario(nextScenario);
     setAnalysisComplete(false);
     setCurrentStep(0);
     setIsAnalyzing(true);
@@ -279,7 +290,7 @@ function App() {
         {analysisComplete && (
           <section className="space-y-6 animate-fade-in sm:space-y-8">
             <MetricsDashboard
-              summary={reportSummary}
+              summary={activeScenario.summary}
               labels={{
                 title: t.dashboard.title,
                 metricBadge: t.dashboard.metricBadge,
@@ -295,6 +306,8 @@ function App() {
               title={t.findings.title}
               impactLabel={t.findings.impact}
               suggestedFixLabel={t.findings.suggestedFix}
+              beforeCodeLabel={t.findings.beforeCode}
+              suggestedCodeLabel={t.findings.suggestedCode}
               criticalLabel={t.findings.critical}
               mediumLabel={t.findings.medium}
               lowLabel={t.findings.low}

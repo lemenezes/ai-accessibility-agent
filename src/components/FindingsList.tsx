@@ -5,6 +5,8 @@ interface FindingsListProps {
   title: string;
   impactLabel: string;
   suggestedFixLabel: string;
+  beforeCodeLabel: string;
+  suggestedCodeLabel: string;
   criticalLabel: string;
   mediumLabel: string;
   lowLabel: string;
@@ -44,6 +46,8 @@ export function FindingsList({
   title,
   impactLabel,
   suggestedFixLabel,
+  beforeCodeLabel,
+  suggestedCodeLabel,
   criticalLabel,
   mediumLabel,
   lowLabel
@@ -88,6 +92,28 @@ export function FindingsList({
               </span>{" "}
               {item.suggestedFix}
             </p>
+
+            {item.beforeCode && (
+              <div className="mt-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.08em] text-slate-400">
+                  {beforeCodeLabel}
+                </p>
+                <pre className="mt-1 overflow-x-auto rounded-lg border border-slate-700 bg-slate-900/80 p-3 text-xs text-slate-200">
+                  <code>{item.beforeCode}</code>
+                </pre>
+              </div>
+            )}
+
+            {item.suggestedCode && (
+              <div className="mt-3">
+                <p className="text-xs font-semibold uppercase tracking-[0.08em] text-slate-400">
+                  {suggestedCodeLabel}
+                </p>
+                <pre className="mt-1 overflow-x-auto rounded-lg border border-cyan-300/25 bg-slate-900/80 p-3 text-xs text-cyan-100">
+                  <code>{item.suggestedCode}</code>
+                </pre>
+              </div>
+            )}
           </article>
         ))}
       </div>
