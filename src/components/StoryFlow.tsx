@@ -7,44 +7,28 @@ import {
   Wrench
 } from "lucide-react";
 
-const storySteps = [
-  {
-    title: "Repository",
-    description: "Connect a GitHub repository URL.",
-    icon: Link2
-  },
-  {
-    title: "Accessibility Agent",
-    description: "An AI agent scans code and UI signals.",
-    icon: Bot
-  },
-  {
-    title: "WCAG Findings",
-    description: "Issues are mapped against WCAG criteria.",
-    icon: ShieldCheck
-  },
-  {
-    title: "Actionable Fixes",
-    description: "Teams receive prioritized fixes to ship.",
-    icon: Wrench
-  }
-];
+interface StoryFlowProps {
+  title: string;
+  description: string;
+  steps: Array<{ title: string; description: string }>;
+}
 
-export function StoryFlow() {
+const storyIcons = [Link2, Bot, ShieldCheck, Wrench];
+
+export function StoryFlow({ title, description, steps }: StoryFlowProps) {
   return (
     <section className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 sm:p-7">
       <div className="max-w-2xl">
-        <h2 className="font-display text-2xl text-slate-100">How it works</h2>
+        <h2 className="font-display text-2xl text-slate-100">{title}</h2>
         <p className="mt-2 text-sm leading-relaxed text-slate-300 sm:text-base">
-          A clear shift-left accessibility pipeline from repository input to
-          remediation guidance.
+          {description}
         </p>
       </div>
 
       <div className="mt-6 flex flex-col items-stretch">
-        {storySteps.map((step, index) => {
-          const Icon = step.icon;
-          const isLast = index === storySteps.length - 1;
+        {steps.map((step, index) => {
+          const Icon = storyIcons[index] ?? Link2;
+          const isLast = index === steps.length - 1;
           const isAgentStep = index === 1;
 
           return (
@@ -52,14 +36,14 @@ export function StoryFlow() {
               <article
                 className={`w-full rounded-xl border p-4 sm:p-5 ${
                   isAgentStep
-                    ? "border-cyan-300/60 bg-gradient-to-r from-cyan-400/20 to-slate-950 shadow-[0_0_50px_rgba(34,211,238,0.25)]"
+                    ? "agent-step-card border-cyan-300/60 bg-gradient-to-r from-cyan-400/20 to-slate-950 shadow-[0_0_50px_rgba(34,211,238,0.25)]"
                     : "border-slate-700 bg-slate-950/70"
                 }`}>
                 <div className="flex items-center gap-3">
                   <span
                     className={`inline-flex h-10 w-10 items-center justify-center rounded-lg border text-cyan-100 ${
                       isAgentStep
-                        ? "border-cyan-200/70 bg-cyan-300/30"
+                        ? "agent-step-icon border-cyan-200/70 bg-cyan-300/30"
                         : "border-cyan-300/30 bg-cyan-300/10"
                     }`}>
                     <Icon className="h-5 w-5" aria-hidden="true" />
@@ -67,7 +51,9 @@ export function StoryFlow() {
                   <div>
                     <h3
                       className={`text-sm font-semibold uppercase tracking-[0.08em] sm:text-base ${
-                        isAgentStep ? "text-cyan-100" : "text-slate-100"
+                        isAgentStep
+                          ? "agent-step-title text-cyan-100"
+                          : "text-slate-100"
                       }`}>
                       {isAgentStep && (
                         <Sparkles

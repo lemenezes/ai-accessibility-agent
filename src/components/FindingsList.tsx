@@ -2,6 +2,12 @@ import type { Finding } from "../types/accessibility";
 
 interface FindingsListProps {
   findings: Finding[];
+  title: string;
+  impactLabel: string;
+  suggestedFixLabel: string;
+  criticalLabel: string;
+  mediumLabel: string;
+  lowLabel: string;
 }
 
 function severityStyle(severity: Finding["severity"]) {
@@ -16,18 +22,35 @@ function severityStyle(severity: Finding["severity"]) {
   return "border-emerald-300/30 bg-emerald-300/10 text-emerald-100";
 }
 
-function severityLabel(severity: Finding["severity"]) {
+function severityLabel(
+  severity: Finding["severity"],
+  criticalLabel: string,
+  mediumLabel: string,
+  lowLabel: string
+) {
   if (severity === "HIGH") {
-    return "CRITICAL";
+    return criticalLabel;
   }
 
-  return severity;
+  if (severity === "MEDIUM") {
+    return mediumLabel;
+  }
+
+  return lowLabel;
 }
 
-export function FindingsList({ findings }: FindingsListProps) {
+export function FindingsList({
+  findings,
+  title,
+  impactLabel,
+  suggestedFixLabel,
+  criticalLabel,
+  mediumLabel,
+  lowLabel
+}: FindingsListProps) {
   return (
     <section className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6">
-      <h2 className="font-display text-xl text-slate-100">Findings</h2>
+      <h2 className="font-display text-xl text-slate-100">{title}</h2>
       <div className="mt-4 space-y-4">
         {findings.map(item => (
           <article
@@ -36,7 +59,12 @@ export function FindingsList({ findings }: FindingsListProps) {
             <div className="flex flex-wrap items-center gap-3">
               <span
                 className={`rounded-full border px-3 py-1 text-xs font-semibold tracking-[0.08em] ${severityStyle(item.severity)}`}>
-                {severityLabel(item.severity)}
+                {severityLabel(
+                  item.severity,
+                  criticalLabel,
+                  mediumLabel,
+                  lowLabel
+                )}
               </span>
               <span className="text-sm font-medium text-slate-300">
                 {item.wcagCriterion}
@@ -48,13 +76,15 @@ export function FindingsList({ findings }: FindingsListProps) {
             </p>
 
             <p className="mt-3 text-sm leading-relaxed text-slate-300">
-              <span className="font-semibold text-slate-100">Impact:</span>{" "}
+              <span className="font-semibold text-slate-100">
+                {impactLabel}
+              </span>{" "}
               {item.impact}
             </p>
 
             <p className="mt-2 text-sm leading-relaxed text-slate-300">
               <span className="font-semibold text-slate-100">
-                Suggested fix:
+                {suggestedFixLabel}
               </span>{" "}
               {item.suggestedFix}
             </p>

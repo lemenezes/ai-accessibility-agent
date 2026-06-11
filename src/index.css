@@ -6,6 +6,30 @@
   --font-sans: "IBM Plex Sans", "Segoe UI", sans-serif;
 }
 
+:root {
+  --app-bg: #02040a;
+  --app-text: #e2e8f0;
+  --surface: rgba(15, 23, 42, 0.72);
+  --surface-strong: rgba(2, 6, 23, 0.76);
+  --surface-border: #1e293b;
+  --text-strong: #f1f5f9;
+  --text-muted: #cbd5e1;
+  --text-subtle: #94a3b8;
+  --input-surface: rgba(2, 6, 23, 0.78);
+}
+
+html[data-theme="light"] {
+  --app-bg: #eef2f7;
+  --app-text: #0f172a;
+  --surface: #ffffff;
+  --surface-strong: #ffffff;
+  --surface-border: #94a3b8;
+  --text-strong: #0f172a;
+  --text-muted: #1e293b;
+  --text-subtle: #334155;
+  --input-surface: #ffffff;
+}
+
 @layer base {
   * {
     box-sizing: border-box;
@@ -14,12 +38,12 @@
   body {
     margin: 0;
     min-height: 100vh;
-    color: #e2e8f0;
+    color: var(--app-text);
     font-family: var(--font-sans);
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background: #02040a;
+    background: var(--app-bg);
   }
 
   #root {
@@ -28,6 +52,142 @@
 }
 
 @layer utilities {
+  .app-atmosphere {
+    background:
+      radial-gradient(
+        circle at 15% 15%,
+        rgba(34, 211, 238, 0.12),
+        transparent 35%
+      ),
+      radial-gradient(
+        circle at 85% 20%,
+        rgba(251, 191, 36, 0.12),
+        transparent 40%
+      ),
+      linear-gradient(180deg, #05080f, #02040a);
+  }
+
+  html[data-theme="light"] .app-atmosphere {
+    background:
+      radial-gradient(
+        circle at 15% 15%,
+        rgba(14, 165, 233, 0.16),
+        transparent 35%
+      ),
+      radial-gradient(
+        circle at 85% 20%,
+        rgba(245, 158, 11, 0.12),
+        transparent 40%
+      ),
+      linear-gradient(180deg, #f6f8fc, #eef2f7);
+  }
+
+  html[data-theme="light"] .bg-slate-900\/70 {
+    background-color: var(--surface) !important;
+  }
+
+  html[data-theme="light"] .bg-slate-950\/70,
+  html[data-theme="light"] .bg-slate-950,
+  html[data-theme="light"] .bg-slate-900\/60 {
+    background-color: var(--surface-strong) !important;
+  }
+
+  html[data-theme="light"] .border-slate-800,
+  html[data-theme="light"] .border-slate-800\/80,
+  html[data-theme="light"] .border-slate-700,
+  html[data-theme="light"] .border-slate-600\/60 {
+    border-color: var(--surface-border) !important;
+  }
+
+  html[data-theme="light"] .hero-chip {
+    border-color: rgba(8, 145, 178, 0.45) !important;
+    background-color: rgba(14, 165, 233, 0.16) !important;
+    color: #0c4a6e !important;
+  }
+
+  html[data-theme="light"] .trust-signal-chip {
+    border-color: rgba(5, 150, 105, 0.42) !important;
+    background-color: rgba(16, 185, 129, 0.16) !important;
+  }
+
+  html[data-theme="light"] .trust-signal-chip .text-emerald-100 {
+    color: #065f46 !important;
+  }
+
+  html[data-theme="light"] .trust-signal-chip .text-emerald-300 {
+    color: #047857 !important;
+  }
+
+  html[data-theme="light"] .agent-step-card {
+    border-color: rgba(14, 165, 233, 0.65) !important;
+    background: linear-gradient(
+      90deg,
+      rgba(14, 165, 233, 0.18),
+      #ffffff
+    ) !important;
+    box-shadow: 0 0 26px rgba(56, 189, 248, 0.2) !important;
+  }
+
+  html[data-theme="light"] .agent-step-icon {
+    border-color: rgba(14, 165, 233, 0.7) !important;
+    background-color: rgba(56, 189, 248, 0.2) !important;
+    color: #0c4a6e !important;
+  }
+
+  html[data-theme="light"] .agent-step-title {
+    color: #0e7490 !important;
+  }
+
+  html[data-theme="light"] .cta-analyze-button {
+    border-color: #0891b2 !important;
+    background: #22d3ee !important;
+    color: #083344 !important;
+  }
+
+  html[data-theme="light"] .cta-analyze-button:hover {
+    background: #06b6d4 !important;
+    color: #042f2e !important;
+  }
+
+  html[data-theme="light"] .text-slate-100 {
+    color: var(--text-strong) !important;
+  }
+
+  html[data-theme="light"] .text-slate-200,
+  html[data-theme="light"] .text-slate-300 {
+    color: var(--text-muted) !important;
+  }
+
+  html[data-theme="light"] .text-slate-400,
+  html[data-theme="light"] .text-slate-500 {
+    color: var(--text-subtle) !important;
+  }
+
+  html[data-theme="light"] .bg-slate-800 {
+    background-color: #cbd5e1 !important;
+  }
+
+  html[data-theme="light"] .from-slate-900,
+  html[data-theme="light"] .to-slate-950 {
+    --tw-gradient-from: rgba(255, 255, 255, 0.95)
+      var(--tw-gradient-from-position) !important;
+    --tw-gradient-to: rgba(248, 250, 252, 0.95) var(--tw-gradient-to-position) !important;
+  }
+
+  html[data-theme="light"] .from-cyan-400\/20 {
+    --tw-gradient-from: rgba(14, 165, 233, 0.18)
+      var(--tw-gradient-from-position) !important;
+  }
+
+  html[data-theme="light"] .to-slate-950 {
+    --tw-gradient-to: rgba(248, 250, 252, 0.96) var(--tw-gradient-to-position) !important;
+  }
+
+  html[data-theme="light"] input,
+  html[data-theme="light"] select {
+    background-color: var(--input-surface);
+  }
+
   .animate-fade-in {
     animation: fade-in 0.55s ease-out both;
   }

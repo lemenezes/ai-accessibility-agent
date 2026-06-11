@@ -3,6 +3,10 @@ import type { AgentInsight } from "../types/accessibility";
 
 interface AgentInsightsPanelProps {
   insights: AgentInsight[];
+  title: string;
+  description: string;
+  priorityLabel: string;
+  priorityMap: Record<"High" | "Medium" | "Low", string>;
 }
 
 function priorityColor(priority: AgentInsight["priority"]) {
@@ -17,7 +21,13 @@ function priorityColor(priority: AgentInsight["priority"]) {
   return "text-emerald-300";
 }
 
-export function AgentInsightsPanel({ insights }: AgentInsightsPanelProps) {
+export function AgentInsightsPanel({
+  insights,
+  title,
+  description,
+  priorityLabel,
+  priorityMap
+}: AgentInsightsPanelProps) {
   return (
     <section className="relative overflow-hidden rounded-2xl border border-cyan-300/30 bg-gradient-to-br from-slate-900 to-slate-950 p-6">
       <div className="absolute -right-20 top-0 h-40 w-40 rounded-full bg-cyan-400/20 blur-3xl" />
@@ -25,14 +35,11 @@ export function AgentInsightsPanel({ insights }: AgentInsightsPanelProps) {
       <div className="relative z-10">
         <div className="flex items-center gap-2">
           <Bot className="h-5 w-5 text-cyan-300" aria-hidden="true" />
-          <h2 className="font-display text-xl text-slate-100">
-            AI Accessibility Agent Insights
-          </h2>
+          <h2 className="font-display text-xl text-slate-100">{title}</h2>
         </div>
 
         <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-300">
-          Natural-language recommendations that highlight risk, user impact, and
-          the highest-priority actions for your team.
+          {description}
         </p>
 
         <div className="mt-5 grid gap-3">
@@ -47,7 +54,7 @@ export function AgentInsightsPanel({ insights }: AgentInsightsPanelProps) {
                 <span
                   className={`inline-flex items-center gap-1 text-xs ${priorityColor(insight.priority)}`}>
                   <TriangleAlert className="h-3.5 w-3.5" aria-hidden="true" />
-                  Priority {insight.priority}
+                  {priorityLabel} {priorityMap[insight.priority]}
                 </span>
               </div>
               <p className="mt-2 text-sm leading-relaxed text-slate-300">

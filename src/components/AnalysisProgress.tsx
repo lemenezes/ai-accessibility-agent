@@ -4,12 +4,24 @@ interface AnalysisProgressProps {
   steps: string[];
   currentStep: number;
   isComplete: boolean;
+  title: string;
+  statusCompleted: string;
+  statusRunning: string;
+  summaryCompleted: string;
+  summaryRunning: string;
+  progressLabel: string;
 }
 
 export function AnalysisProgress({
   steps,
   currentStep,
-  isComplete
+  isComplete,
+  title,
+  statusCompleted,
+  statusRunning,
+  summaryCompleted,
+  summaryRunning,
+  progressLabel
 }: AnalysisProgressProps) {
   const completedSteps = isComplete
     ? steps.length
@@ -22,23 +34,19 @@ export function AnalysisProgress({
 
       <div className="relative z-10">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="font-display text-xl text-slate-100">
-            Live analysis pipeline
-          </h2>
+          <h2 className="font-display text-xl text-slate-100">{title}</h2>
           <span className="rounded-full border border-cyan-300/35 bg-cyan-300/10 px-3 py-1 text-xs font-semibold tracking-[0.08em] text-cyan-100">
-            {isComplete ? "Completed" : "In Progress"}
+            {isComplete ? statusCompleted : statusRunning}
           </span>
         </div>
 
         <p className="mt-2 text-sm text-slate-300">
-          {isComplete
-            ? "Repository scan finished. Accessibility report generated."
-            : "Executing repository scan and accessibility checks..."}
+          {isComplete ? summaryCompleted : summaryRunning}
         </p>
 
         <div className="mt-4">
           <div className="mb-2 flex items-center justify-between text-xs uppercase tracking-[0.08em] text-slate-300">
-            <span>Progress</span>
+            <span>{progressLabel}</span>
             <span>{progress}%</span>
           </div>
 
