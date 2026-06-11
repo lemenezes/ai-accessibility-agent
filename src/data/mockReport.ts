@@ -4,7 +4,11 @@ import type {
   ReportSummary
 } from "../types/accessibility";
 
-export type AccessibilityScenarioKey = "excellent" | "average" | "poor";
+export type AccessibilityScenarioKey =
+  | "excellent"
+  | "average"
+  | "poor"
+  | "codeSnippet";
 
 export interface AccessibilityScenario {
   key: AccessibilityScenarioKey;
@@ -13,7 +17,23 @@ export interface AccessibilityScenario {
   insights: AgentInsight[];
 }
 
-const scenarios: Record<AccessibilityScenarioKey, AccessibilityScenario> = {
+export const SAMPLE_CODE_SNIPPET = `![](/banner.png)
+
+<button>Enviar</button>
+
+<input id="nome" />
+
+<a href="/checkout">click here</a>
+
+.muted-text {
+  color: #94a3b8;
+  background: #cbd5e1;
+}`;
+
+const scenarios: Record<
+  Exclude<AccessibilityScenarioKey, "codeSnippet">,
+  AccessibilityScenario
+> = {
   excellent: {
     key: "excellent",
     summary: {
@@ -302,10 +322,116 @@ const scenarios: Record<AccessibilityScenarioKey, AccessibilityScenario> = {
   }
 };
 
+const snippetFindingTemplates: Finding[] = [
+  {
+    id: "CS-001",
+    severity: "HIGH",
+    wcagCriterion: "WCAG 1.1.1",
+    description: "Image found without meaningful alternative text.",
+    impact: "Screen reader users cannot understand what the image represents.",
+    suggestedFix: "Provide a descriptive alt attribute for informative images.",
+    beforeCode: "![](/banner.png)",
+    suggestedCode: "![Banner principal](/banner.png)"
+  },
+  {
+    id: "CS-002",
+    severity: "HIGH",
+    wcagCriterion: "WCAG 4.1.2",
+    description: "Icon-only button is missing an accessible name.",
+    impact:
+      "Assistive technologies may announce the control as an unnamed button.",
+    suggestedFix:
+      "Add aria-label or visible text that clearly describes the action.",
+    beforeCode: "<button>Enviar</button>",
+    suggestedCode: '<button aria-label="Enviar formulário">Enviar</button>'
+  },
+  {
+    id: "CS-003",
+    severity: "MEDIUM",
+    wcagCriterion: "WCAG 1.3.1",
+    description: "Form input is missing a programmatically associated label.",
+    impact:
+      "Screen reader users may hear an unlabeled field and lose form context.",
+    suggestedFix: "Associate a visible label using htmlFor/id.",
+    beforeCode: '<input id="nome" />',
+    suggestedCode: '<label htmlFor="nome">Nome</label>\n<input id="nome" />'
+  },
+  {
+    id: "CS-004",
+    severity: "LOW",
+    wcagCriterion: "WCAG 2.4.4",
+    description: "Generic link text such as click here was detected.",
+    impact: "Users navigating by link lists lose context about destination.",
+    suggestedFix:
+      "Replace generic wording with destination-specific link text.",
+    beforeCode: '<a href="/checkout">click here</a>',
+    suggestedCode: '<a href="/checkout">View checkout details</a>'
+  },
+  {
+    id: "CS-005",
+    severity: "MEDIUM",
+    wcagCriterion: "WCAG 1.4.3",
+    description: "Potential low-contrast color combination detected in CSS.",
+    impact: "Users with low vision may struggle to read foreground content.",
+    suggestedFix:
+      "Increase text-to-background contrast ratio to at least 4.5:1.",
+    beforeCode: ".muted-text { color: #94a3b8; background: #cbd5e1; }",
+    suggestedCode: ".muted-text { color: #334155; background: #f8fafc; }"
+  }
+];
+
+const snippetInsightsTemplate: AgentInsight[] = [
+  {
+    id: "CS-I-001",
+    title: "Critical semantic gaps found in interactive UI",
+    detail:
+      "The snippet includes controls that are not fully perceivable or operable with assistive technologies, requiring immediate fixes.",
+    priority: "High"
+  },
+  {
+    id: "CS-I-002",
+    title: "Quick wins available with low implementation risk",
+    detail:
+      "Most issues can be resolved by adding semantic attributes and replacing non-semantic patterns with accessible HTML elements.",
+    priority: "Medium"
+  },
+  {
+    id: "CS-I-003",
+    title: "Recommended next step",
+    detail:
+      "Add a snippet-level accessibility checklist in code review to prevent recurring keyboard and label issues.",
+    priority: "Low"
+  }
+];
+
+const snippetPatternRules: Array<{ id: string; pattern: RegExp }> = [
+  { id: "CS-001", pattern: /!\[[^\]]*\]\([^)]*\)|<img\b(?![^>]*\balt=)/i },
+  {
+    id: "CS-002",
+    pattern:
+      /<button\b(?![^>]*(aria-label|aria-labelledby))[^>]*>[\s\S]*?<\/button>/i
+  },
+  {
+    id: "CS-003",
+    pattern: /<input\b(?![^>]*(aria-label|aria-labelledby))[^>]*>/i
+  },
+  {
+    id: "CS-004",
+    pattern: />\s*(click here|clique aqui|haz clic aqu[ií])\s*</i
+  },
+  {
+    id: "CS-005",
+    pattern:
+      /(color\s*:\s*#(?:9[0-9a-f]{5}|a[0-9a-f]{5}|b[0-9a-f]{5})\s*;[^\n{}]*background\s*:\s*#(?:c[0-9a-f]{5}|d[0-9a-f]{5}|e[0-9a-f]{5}|f[0-9a-f]{5}))|(text-(slate|gray)-[34]00)/i
+  }
+];
+
 const excellentKeywords = ["accessible", "a11y", "inclusive"];
 const poorKeywords = ["legacy", "old", "admin"];
 
-export function resolveScenarioKeyByUrl(url: string): AccessibilityScenarioKey {
+export function resolveScenarioKeyByUrl(
+  url: string
+): Exclude<AccessibilityScenarioKey, "codeSnippet"> {
   const normalizedUrl = url.toLowerCase();
 
   if (excellentKeywords.some(keyword => normalizedUrl.includes(keyword))) {
@@ -321,6 +447,109 @@ export function resolveScenarioKeyByUrl(url: string): AccessibilityScenarioKey {
 
 export function getScenarioByUrl(url: string): AccessibilityScenario {
   return scenarios[resolveScenarioKeyByUrl(url)];
+}
+
+function buildSnippetFindings(snippet: string): Finding[] {
+  const normalizedSnippet = snippet.trim();
+
+  const matchedIds = snippetPatternRules
+    .filter(rule => rule.pattern.test(normalizedSnippet))
+    .map(rule => rule.id);
+
+  if (!matchedIds.length) {
+    return [
+      {
+        id: "CS-006",
+        severity: "LOW",
+        wcagCriterion: "WCAG 2.4.6",
+        description: "No high-risk issue pattern was detected in this snippet.",
+        impact:
+          "The code appears healthier, but manual review is still needed for complete accessibility coverage.",
+        suggestedFix:
+          "Keep semantic HTML and run automated checks before merging.",
+        beforeCode: normalizedSnippet.slice(0, 240),
+        suggestedCode:
+          "Continue enforcing semantic markup and add automated accessibility checks in CI."
+      }
+    ];
+  }
+
+  return snippetFindingTemplates
+    .filter(item => matchedIds.includes(item.id))
+    .map(item => {
+      if (item.id === "CS-001") {
+        const markdownImage =
+          normalizedSnippet.match(/!\[[^\]]*\]\([^)]*\)/i)?.[0];
+        const markdownImageSuggested = markdownImage
+          ? markdownImage.replace(/!\[[^\]]*\]/, "![Banner principal]")
+          : undefined;
+
+        return {
+          ...item,
+          beforeCode:
+            markdownImage ??
+            normalizedSnippet.match(/<img\b[^>]*>/i)?.[0] ??
+            item.beforeCode,
+          suggestedCode: markdownImageSuggested ?? item.suggestedCode
+        };
+      }
+
+      if (item.id === "CS-002") {
+        return {
+          ...item,
+          beforeCode:
+            normalizedSnippet.match(/<button\b[\s\S]*?<\/button>/i)?.[0] ??
+            item.beforeCode
+        };
+      }
+
+      if (item.id === "CS-003") {
+        return {
+          ...item,
+          beforeCode:
+            normalizedSnippet.match(/<input\b[^>]*>/i)?.[0] ?? item.beforeCode
+        };
+      }
+
+      if (item.id === "CS-004") {
+        return {
+          ...item,
+          beforeCode:
+            normalizedSnippet.match(/<a\b[\s\S]*?>([\s\S]*?)<\/a>/i)?.[0] ??
+            item.beforeCode
+        };
+      }
+
+      return item;
+    });
+}
+
+export function getScenarioBySnippet(snippet: string): AccessibilityScenario {
+  const findings = buildSnippetFindings(snippet);
+  const criticalIssues = findings.filter(
+    item => item.severity === "HIGH"
+  ).length;
+  const mediumIssues = findings.filter(
+    item => item.severity === "MEDIUM"
+  ).length;
+  const lowIssues = findings.filter(item => item.severity === "LOW").length;
+
+  const weightedPenalty =
+    criticalIssues * 12 + mediumIssues * 6 + lowIssues * 2;
+  const score = Math.max(42, 98 - weightedPenalty);
+
+  return {
+    key: "codeSnippet",
+    summary: {
+      score,
+      criticalIssues,
+      mediumIssues,
+      lowIssues,
+      analyzedFiles: 1
+    },
+    findings,
+    insights: snippetInsightsTemplate
+  };
 }
 
 export const defaultScenario = scenarios.average;

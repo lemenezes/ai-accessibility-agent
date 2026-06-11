@@ -195,21 +195,21 @@ html[data-theme="light"] {
   }
 
   .severity-badge-critical {
-    border-color: rgba(248, 113, 113, 0.56);
-    background-color: rgba(127, 29, 29, 0.26);
-    color: #fee2e2;
+    border-color: rgba(248, 113, 113, 0.6);
+    background-color: rgba(127, 29, 29, 0.3);
+    color: #fef2f2;
   }
 
   .severity-badge-medium {
-    border-color: rgba(217, 119, 6, 0.58);
-    background-color: rgba(120, 53, 15, 0.25);
-    color: #fde68a;
+    border-color: rgba(217, 119, 6, 0.62);
+    background-color: rgba(120, 53, 15, 0.29);
+    color: #fef3c7;
   }
 
   .severity-badge-low {
-    border-color: rgba(45, 212, 191, 0.54);
-    background-color: rgba(19, 78, 74, 0.26);
-    color: #d1fae5;
+    border-color: rgba(45, 212, 191, 0.58);
+    background-color: rgba(19, 78, 74, 0.3);
+    color: #ecfdf5;
   }
 
   .finding-card {
@@ -248,21 +248,21 @@ html[data-theme="light"] {
   }
 
   html[data-theme="light"] .severity-badge-critical {
-    border-color: rgba(153, 27, 27, 0.42);
-    background-color: rgba(248, 113, 113, 0.12);
+    border-color: rgba(153, 27, 27, 0.46);
+    background-color: rgba(248, 113, 113, 0.14);
     color: #7f1d1d;
   }
 
   html[data-theme="light"] .severity-badge-medium {
-    border-color: rgba(146, 64, 14, 0.4);
-    background-color: rgba(245, 158, 11, 0.14);
-    color: #7c2d12;
+    border-color: rgba(146, 64, 14, 0.44);
+    background-color: rgba(245, 158, 11, 0.16);
+    color: #6b2e10;
   }
 
   html[data-theme="light"] .severity-badge-low {
-    border-color: rgba(13, 148, 136, 0.4);
-    background-color: rgba(45, 212, 191, 0.13);
-    color: #115e59;
+    border-color: rgba(13, 148, 136, 0.44);
+    background-color: rgba(45, 212, 191, 0.15);
+    color: #0f5a55;
   }
 
   html[data-theme="light"] .finding-card-critical {

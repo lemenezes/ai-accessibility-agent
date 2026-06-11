@@ -9,7 +9,12 @@ import { MetricsDashboard } from "./components/MetricsDashboard";
 import { RepositoryInput } from "./components/RepositoryInput";
 import { StoryFlow } from "./components/StoryFlow";
 import { TrustSignals } from "./components/TrustSignals";
-import { defaultScenario, getScenarioByUrl } from "./data/mockReport";
+import {
+  defaultScenario,
+  getScenarioBySnippet,
+  getScenarioByUrl,
+  SAMPLE_CODE_SNIPPET
+} from "./data/mockReport";
 import { getTranslations, languageOptions } from "./i18n/translations";
 import { useLanguage } from "./i18n/useLanguage";
 import { useTheme } from "./theme/useTheme";
@@ -31,6 +36,8 @@ function App() {
   const languageMenuRef = useRef<HTMLDivElement | null>(null);
 
   const [repoUrl, setRepoUrl] = useState<string>(DEMO_REPOSITORY_URLS.average);
+  const [analysisMode, setAnalysisMode] = useState<"url" | "snippet">("url");
+  const [codeSnippet, setCodeSnippet] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [currentStep, setCurrentStep] = useState(-1);
   const [analysisComplete, setAnalysisComplete] = useState(false);
@@ -82,6 +89,11 @@ function App() {
   const isValidGithubUrl = useMemo(
     () => /^https:\/\/github\.com\/.+\/.+/i.test(repoUrl.trim()),
     [repoUrl]
+  );
+
+  const isValidSnippet = useMemo(
+    () => codeSnippet.trim().length >= 20,
+    [codeSnippet]
   );
 
   useEffect(() => {
@@ -149,11 +161,27 @@ function App() {
   };
 
   const handleAnalyze = () => {
-    if (!isValidGithubUrl || isAnalyzing) {
+    if (isAnalyzing) {
       return;
     }
 
-    startAnalysis(repoUrl);
+    if (analysisMode === "url") {
+      if (!isValidGithubUrl) {
+        return;
+      }
+
+      startAnalysis(repoUrl);
+      return;
+    }
+
+    if (!isValidSnippet) {
+      return;
+    }
+
+    setPendingScenario(getScenarioBySnippet(codeSnippet));
+    setAnalysisComplete(false);
+    setCurrentStep(0);
+    setIsAnalyzing(true);
   };
 
   const handleUseDemoRepository = () => {
@@ -172,6 +200,22 @@ function App() {
     }
 
     setRepoUrl(DEMO_REPOSITORY_URLS[scenario]);
+  };
+
+  const handleModeChange = (mode: "url" | "snippet") => {
+    if (isAnalyzing) {
+      return;
+    }
+
+    setAnalysisMode(mode);
+  };
+
+  const handleUseSampleCode = () => {
+    if (isAnalyzing) {
+      return;
+    }
+
+    setCodeSnippet(SAMPLE_CODE_SNIPPET);
   };
 
   return (
@@ -283,28 +327,48 @@ function App() {
         />
 
         <RepositoryInput
+          mode={analysisMode}
+          onModeChange={handleModeChange}
           url={repoUrl}
           onUrlChange={setRepoUrl}
+          snippet={codeSnippet}
+          onSnippetChange={setCodeSnippet}
           onAnalyze={handleAnalyze}
           onUseDemoRepository={handleUseDemoRepository}
+          onUseSampleCode={handleUseSampleCode}
           onSelectQuickScenario={handleQuickScenarioSelect}
           isAnalyzing={isAnalyzing}
           title={t.repository.title}
           description={t.repository.description}
+          tabRepositoryLabel={t.repository.tabRepository}
+          tabSnippetLabel={t.repository.tabSnippet}
           inputLabel={t.repository.inputLabel}
           placeholder={t.repository.placeholder}
+          snippetLabel={t.repository.snippetLabel}
+          snippetPlaceholder={t.repository.snippetPlaceholder}
           useDemoRepositoryLabel={t.repository.useDemoRepository}
+          useSampleCodeLabel={t.repository.useSampleCode}
           quickDemoLabel={t.repository.quickDemoLabel}
           quickExcellentLabel={t.repository.quickExcellent}
           quickAverageLabel={t.repository.quickAverage}
           quickPoorLabel={t.repository.quickPoor}
-          analyzeLabel={t.repository.buttonAnalyze}
+          analyzeLabel={
+            analysisMode === "url"
+              ? t.repository.buttonAnalyze
+              : t.repository.buttonAnalyzeSnippet
+          }
           analyzingLabel={t.repository.buttonAnalyzing}
         />
 
-        {!isValidGithubUrl && (
+        {analysisMode === "url" && !isValidGithubUrl && (
           <p className="rounded-xl border border-rose-400/30 bg-rose-400/10 px-4 py-3 text-sm text-rose-100">
             {t.app.invalidUrl}
+          </p>
+        )}
+
+        {analysisMode === "snippet" && !isValidSnippet && (
+          <p className="rounded-xl border border-amber-400/30 bg-amber-400/10 px-4 py-3 text-sm text-amber-100">
+            {t.app.invalidSnippet}
           </p>
         )}
 
@@ -363,7 +427,9 @@ function App() {
               {t.app.readyTitle}
             </h2>
             <p className="mt-2 text-sm text-slate-300">
-              {t.app.readyDescription}
+              {analysisMode === "url"
+                ? t.app.readyDescription
+                : t.app.readyDescriptionSnippet}
             </p>
           </section>
         )}

@@ -37,21 +37,28 @@ interface TranslationSchema {
   repository: {
     title: string;
     description: string;
+    tabRepository: string;
+    tabSnippet: string;
     inputLabel: string;
     placeholder: string;
+    snippetLabel: string;
+    snippetPlaceholder: string;
     useDemoRepository: string;
+    useSampleCode: string;
     quickDemoLabel: string;
     quickExcellent: string;
     quickAverage: string;
     quickPoor: string;
     buttonAnalyze: string;
+    buttonAnalyzeSnippet: string;
     buttonAnalyzing: string;
-    runDemo: string;
   };
   app: {
     invalidUrl: string;
+    invalidSnippet: string;
     readyTitle: string;
     readyDescription: string;
+    readyDescriptionSnippet: string;
   };
   pipeline: {
     title: string;
@@ -147,25 +154,34 @@ export const translations: Record<Language, TranslationSchema> = {
       ]
     },
     repository: {
-      title: "Analyze Repository",
+      title: "Analyze Accessibility",
       description:
         "Enter a GitHub repository URL to start the automated accessibility scan.",
+      tabRepository: "Repository URL",
+      tabSnippet: "Code Snippet",
       inputLabel: "GitHub repository URL",
       placeholder: "https://github.com/company/repository",
+      snippetLabel: "Code snippet",
+      snippetPlaceholder: "Paste your JSX, HTML, or CSS snippet here...",
       useDemoRepository: "Use Demo Repository",
+      useSampleCode: "Use sample code",
       quickDemoLabel: "Quick Demo Scenarios",
       quickExcellent: "Excellent",
       quickAverage: "Average",
       quickPoor: "Poor",
       buttonAnalyze: "Analyze Repository",
-      buttonAnalyzing: "Analyzing...",
-      runDemo: "Run Demo"
+      buttonAnalyzeSnippet: "Analyze Code Snippet",
+      buttonAnalyzing: "Analyzing..."
     },
     app: {
       invalidUrl: "Enter a valid GitHub repository URL to start the analysis.",
+      invalidSnippet:
+        "Paste at least one code block to run the Code Snippet Analysis.",
       readyTitle: "Ready to scan",
       readyDescription:
-        "Click Analyze Repository to run the simulated flow and open the full dashboard with findings and AI insights."
+        "Click Analyze Repository to run the simulated flow and open the full dashboard with findings and AI insights.",
+      readyDescriptionSnippet:
+        "Paste code and click Analyze Repository to run Code Snippet Analysis with accessibility findings and suggested fixes."
     },
     pipeline: {
       title: "Live analysis pipeline",
@@ -268,26 +284,35 @@ export const translations: Record<Language, TranslationSchema> = {
       ]
     },
     repository: {
-      title: "Analisar Repositório",
+      title: "Analisar Acessibilidade",
       description:
         "Informe a URL de um repositório no GitHub para iniciar o escaneamento automático de acessibilidade.",
+      tabRepository: "URL do Repositório",
+      tabSnippet: "Trecho de Código",
       inputLabel: "URL do repositório no GitHub",
       placeholder: "https://github.com/empresa/repositorio",
+      snippetLabel: "Trecho de código",
+      snippetPlaceholder: "Cole aqui um trecho de JSX, HTML ou CSS...",
       useDemoRepository: "Usar repositório demo",
+      useSampleCode: "Usar código de exemplo",
       quickDemoLabel: "Cenários rápidos de demo",
       quickExcellent: "Excelente",
       quickAverage: "Médio",
       quickPoor: "Ruim",
       buttonAnalyze: "Analisar Repositório",
-      buttonAnalyzing: "Analisando...",
-      runDemo: "Executar demo"
+      buttonAnalyzeSnippet: "Analisar Trecho de Código",
+      buttonAnalyzing: "Analisando..."
     },
     app: {
       invalidUrl:
         "Informe uma URL válida de repositório no GitHub para iniciar a análise.",
+      invalidSnippet:
+        "Cole ao menos um bloco de código para executar a análise de trecho de código.",
       readyTitle: "Pronto para escanear",
       readyDescription:
-        "Clique em Analisar Repositório para executar o fluxo simulado e abrir o dashboard completo com achados e insights de IA."
+        "Clique em Analisar Repositório para executar o fluxo simulado e abrir o dashboard completo com achados e insights de IA.",
+      readyDescriptionSnippet:
+        "Cole o código e clique em Analisar Repositório para executar a Code Snippet Analysis com achados de acessibilidade e correções sugeridas."
     },
     pipeline: {
       title: "Pipeline de análise em tempo real",
@@ -368,6 +393,53 @@ export const translations: Record<Language, TranslationSchema> = {
             "Leitores de tela anunciam links ambíguos, reduzindo clareza e velocidade de navegação.",
           suggestedFix:
             'Substitua textos como "clique aqui" por links descritivos.'
+        },
+        "CS-001": {
+          description: "Imagem encontrada sem texto alternativo significativo.",
+          impact:
+            "Usuários de leitores de tela não conseguem compreender o conteúdo representado na imagem.",
+          suggestedFix:
+            "Adicione um atributo alt descritivo para imagens informativas.",
+          beforeCode: "![](/banner.png)",
+          suggestedCode: "![Banner principal](/banner.png)"
+        },
+        "CS-002": {
+          description: "Botão somente com ícone sem nome acessível.",
+          impact:
+            "Tecnologias assistivas podem anunciar esse controle como botão sem nome.",
+          suggestedFix:
+            "Adicione aria-label ou texto visível que descreva claramente a ação."
+        },
+        "CS-003": {
+          wcagCriterion: "WCAG 1.3.1",
+          description:
+            "Campo de formulário sem rótulo associado programaticamente.",
+          impact:
+            "Usuários de leitor de tela podem ouvir um campo sem nome e perder contexto do formulário.",
+          suggestedFix: "Associe um rótulo visível ao input usando htmlFor/id."
+        },
+        "CS-004": {
+          description: "Texto de link genérico como clique aqui foi detectado.",
+          impact:
+            "Usuários que navegam por lista de links perdem contexto de destino.",
+          suggestedFix:
+            "Troque o texto genérico por um rótulo descritivo do destino."
+        },
+        "CS-005": {
+          description:
+            "Combinação de cores com possível baixo contraste detectada no CSS.",
+          impact:
+            "Pessoas com baixa visão podem ter dificuldade para ler o conteúdo em primeiro plano.",
+          suggestedFix:
+            "Eleve a razão de contraste entre texto e fundo para no mínimo 4.5:1."
+        },
+        "CS-006": {
+          description:
+            "Nenhum padrão de alto risco foi detectado neste trecho de código.",
+          impact:
+            "O código parece mais saudável, mas uma revisão manual ainda é necessária para cobertura completa.",
+          suggestedFix:
+            "Mantenha HTML semântico e execute verificações automatizadas antes do merge."
         }
       }
     },
@@ -392,6 +464,21 @@ export const translations: Record<Language, TranslationSchema> = {
           title: "Ação de maior impacto para o próximo sprint",
           detail:
             "Padronize um checklist automatizado de acessibilidade no CI para evitar regressões e reduzir retrabalho antes da release."
+        },
+        "CS-I-001": {
+          title: "Falhas semânticas críticas em elementos interativos",
+          detail:
+            "O trecho contém controles que não são totalmente perceptíveis ou operáveis com tecnologias assistivas, exigindo correções imediatas."
+        },
+        "CS-I-002": {
+          title: "Ganhos rápidos com baixo risco de implementação",
+          detail:
+            "A maior parte dos problemas pode ser corrigida com atributos semânticos e substituição de padrões não semânticos por HTML acessível."
+        },
+        "CS-I-003": {
+          title: "Próxima ação recomendada",
+          detail:
+            "Adicione um checklist de acessibilidade para snippets no code review para evitar recorrência de problemas de teclado e rotulagem."
         }
       }
     },
@@ -452,26 +539,35 @@ export const translations: Record<Language, TranslationSchema> = {
       ]
     },
     repository: {
-      title: "Analizar Repositorio",
+      title: "Analizar Accesibilidad",
       description:
         "Ingresa una URL de repositorio de GitHub para iniciar el escaneo automático de accesibilidad.",
+      tabRepository: "URL del Repositorio",
+      tabSnippet: "Fragmento de Código",
       inputLabel: "URL del repositorio de GitHub",
       placeholder: "https://github.com/empresa/repositorio",
+      snippetLabel: "Fragmento de código",
+      snippetPlaceholder: "Pega aquí un fragmento de JSX, HTML o CSS...",
       useDemoRepository: "Usar repositorio demo",
+      useSampleCode: "Usar código de ejemplo",
       quickDemoLabel: "Escenarios rápidos de demo",
       quickExcellent: "Excelente",
       quickAverage: "Medio",
       quickPoor: "Crítico",
       buttonAnalyze: "Analizar Repositorio",
-      buttonAnalyzing: "Analizando...",
-      runDemo: "Ejecutar demo"
+      buttonAnalyzeSnippet: "Analizar Fragmento de Código",
+      buttonAnalyzing: "Analizando..."
     },
     app: {
       invalidUrl:
         "Ingresa una URL válida de repositorio de GitHub para iniciar el análisis.",
+      invalidSnippet:
+        "Pega al menos un bloque de código para ejecutar el análisis de fragmento.",
       readyTitle: "Listo para escanear",
       readyDescription:
-        "Haz clic en Analizar Repositorio para ejecutar el flujo simulado y abrir el dashboard completo con hallazgos e insights de IA."
+        "Haz clic en Analizar Repositorio para ejecutar el flujo simulado y abrir el dashboard completo con hallazgos e insights de IA.",
+      readyDescriptionSnippet:
+        "Pega el código y haz clic en Analizar Repositorio para ejecutar Code Snippet Analysis con hallazgos de accesibilidad y correcciones sugeridas."
     },
     pipeline: {
       title: "Pipeline de análisis en vivo",
@@ -551,6 +647,64 @@ export const translations: Record<Language, TranslationSchema> = {
             "Los lectores de pantalla anuncian enlaces ambiguos, reduciendo claridad y velocidad de navegación.",
           suggestedFix:
             'Sustituye textos como "haz clic aquí" por enlaces descriptivos.'
+        },
+        "CS-001": {
+          description:
+            "Se detectó una imagen sin texto alternativo significativo.",
+          impact:
+            "Las personas usuarias de lector de pantalla no pueden comprender lo que representa la imagen.",
+          suggestedFix:
+            "Incluye un atributo alt descriptivo para imágenes informativas.",
+          beforeCode: "![](/banner.png)",
+          suggestedCode: "![Banner principal](/banner.png)"
+        },
+        "CS-002": {
+          description: "Botón sin nombre accesible.",
+          impact:
+            "Las tecnologías asistivas pueden anunciar el control como botón sin nombre.",
+          suggestedFix:
+            "Agrega aria-label o texto visible que describa claramente la acción.",
+          beforeCode: "<button>Enviar</button>",
+          suggestedCode:
+            '<button aria-label="Enviar formulario">Enviar</button>'
+        },
+        "CS-003": {
+          wcagCriterion: "WCAG 1.3.1",
+          description:
+            "Campo de formulario sin etiqueta asociada programáticamente.",
+          impact:
+            "Las personas usuarias de lector de pantalla pueden escuchar un campo sin nombre y perder contexto del formulario.",
+          suggestedFix:
+            "Asocia una etiqueta visible al input usando htmlFor/id.",
+          beforeCode: '<input id="nome" />',
+          suggestedCode:
+            '<label htmlFor="nome">Nombre</label>\n<input id="nome" />'
+        },
+        "CS-004": {
+          description:
+            "Se detectó texto de enlace genérico como haz clic aquí.",
+          impact:
+            "Las personas que navegan por listas de enlaces pierden contexto de destino.",
+          suggestedFix:
+            "Sustituye el texto genérico por un enlace descriptivo del destino.",
+          beforeCode: '<a href="/checkout">click here</a>',
+          suggestedCode: '<a href="/checkout">Ver detalles del checkout</a>'
+        },
+        "CS-005": {
+          description:
+            "Se detectó combinación de colores con posible bajo contraste en CSS.",
+          impact:
+            "Las personas con baja visión pueden tener dificultades para leer el contenido en primer plano.",
+          suggestedFix:
+            "Aumenta la relación de contraste entre texto y fondo al menos a 4.5:1."
+        },
+        "CS-006": {
+          description:
+            "No se detectó un patrón de alto riesgo en este fragmento.",
+          impact:
+            "El código parece más saludable, pero una revisión manual sigue siendo necesaria para cobertura completa.",
+          suggestedFix:
+            "Mantén HTML semántico y ejecuta verificaciones automatizadas antes del merge."
         }
       }
     },
@@ -575,6 +729,21 @@ export const translations: Record<Language, TranslationSchema> = {
           title: "Acción de mayor impacto para el próximo sprint",
           detail:
             "Estandariza una checklist automatizada de accesibilidad en CI para prevenir regresiones y reducir retrabajo antes del release."
+        },
+        "CS-I-001": {
+          title: "Brechas semánticas críticas en UI interactiva",
+          detail:
+            "El fragmento contiene controles que no son totalmente perceptibles u operables con tecnologías asistivas y requieren correcciones inmediatas."
+        },
+        "CS-I-002": {
+          title: "Mejoras rápidas con bajo riesgo de implementación",
+          detail:
+            "La mayoría de los problemas puede resolverse con atributos semánticos y reemplazo de patrones no semánticos por HTML accesible."
+        },
+        "CS-I-003": {
+          title: "Siguiente paso recomendado",
+          detail:
+            "Agrega una checklist de accesibilidad para fragmentos en code review para evitar recurrencia de problemas de teclado y etiquetado."
         }
       }
     },
